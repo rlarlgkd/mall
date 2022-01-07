@@ -1,0 +1,22 @@
+@charset "UTF-8";
+
+.outer{
+	display: flex;
+	width: 1000px;
+	margin: 50px auto;
+}
+/* 
+.inner{
+	display: inline-block;
+	margin: 0;
+}
+.map{
+	display: inline-block;
+	margin:0;
+} 
+
+#centerAlign {
+	width: 800px;
+	margin: 100px auto;
+}
+*/

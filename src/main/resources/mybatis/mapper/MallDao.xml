@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.study.springboot.dao.IMallDao">
+    
+    <!--       main        -->
+    <select id="listDao" resultType="com.study.springboot.dto.ProductDto">
+		<![CDATA[
+		SELECT * 
+		  FROM(select * 
+		        from product 
+		     ORDER BY hit DESC)
+		  WHERE rownum <= 9
+		]]>
+	</select>
+	
+    <!--       navbar       -->
+	<insert id="signupDao" >
+		INSERT INTO member (mid, mpw, mname, usertype, postcode,
+		address, detailAddress, extraAddress, enabled)
+		VALUES (#{param1}, #{param2}, 
+		#{param3}, #{param4},#{param5},#{param6},#{param7},#{param8}, 1)
+	</insert>
+	<select id="loginConfirmDao" resultType="_int">
+		SELECT COUNT(*) FROM member WHERE mId=#{param1}
+	</select>
+	<select id="loginDao" resultType="com.study.springboot.dto.MemberDto">
+		SELECT * FROM member WHERE mId=#{param1} AND mPw=#{param2}
+	</select>
+	
+	<select id="checkId" resultType="com.study.springboot.dto.MemberDto">
+		select mid from member
+	</select>
+	
+	<update id="infoChangeDao">
+		UPDATE member SET mpw=#{param1}, postcode=#{param2}, address=#{param3}
+						, detailAddress=#{param4}, extraAddress=#{param5}
+		WHERE mid =#{param6}
+	</update>
+	<select id="memberInfoDao" resultType="com.study.springboot.dto.MemberDto">
+   		SELECT * FROM member WHERE mid=#{param1}
+   </select>
+   
+   <delete id="delNotice">
+   		DELETE FROM notice_bbs WHERE mid= #{param1}
+   </delete>
+   <delete id="delSale">
+   		DELETE FROM sale WHERE mid= #{param1}
+   </delete>
+   <delete id="delReview">
+   		DELETE FROM review WHERE mid= #{param1}
+   </delete>
+   <delete id="delCart">
+   		DELETE FROM cart WHERE mid= #{param1}
+   </delete>
+   <delete id="delProduct">
+   		DELETE FROM product WHERE mid= #{param1}
+   </delete>
+	<delete id="withdrawDao">
+		DELETE FROM member WHERE mid= #{param1}
+	</delete>
+	
+	<insert id="sellerWriteDao" >
+		INSERT INTO product (pnum, pname, price, pcnt, mid)
+		VALUES (p_seq.nextval, #{param1}, #{param2}, #{param3}, #{param4} )
+	</insert>
+
+	<!--       totalView       -->
+	<select id="bestViewDao" resultType="com.study.springboot.dto.ProductDto">
+		SELECT * FROM product WHERE pname LIKE '%' || #{0} || '%'
+	</select>
+	<select id="resultDao" resultType="_int">
+		SELECT COUNT(*) FROM product WHERE pname LIKE '%' || #{0} || '%'
+	</select>
+	
+    <!--       contentView       -->
+    <select id="viewDao" resultType="com.study.springboot.dto.ProductDto">
+		SELECT * FROM product WHERE pnum = #{param1}
+	</select>
+	<update id="upHitDao">
+		UPDATE product SET hit = hit + 1 WHERE pnum = #{param1}
+	</update>
+	
+	
+    <!--     cart     -->
+    <delete id="cartDeleteDao">
+		DELETE FROM cart WHERE pnum = #{param1} AND mid = #{param2}
+	</delete>
+	<select id="cartDao" resultType="map">
+		 SELECT p.pname, c.ccnt, p.price, c.pnum, c.mid
+		 FROM product p, cart c 
+		 WHERE c.mid =#{param1}
+		 AND p.pnum = c.pnum
+	</select>
+	<select id="cartSelectDao" resultType="_int">
+		select count(*) from cart where mid=#{param1} and pnum=#{param2}
+	</select>
+	<insert id="cartAddDao">
+		INSERT INTO cart (mid, pnum, ccnt)
+		VALUES (#{param1}, #{param2}, #{param3})
+	</insert>
+	<update id="cartUpdateDao">
+		update cart set ccnt=ccnt+#{param1} where pnum=#{param2}
+	</update>
+	
+    <!--      review        -->
+    <select id="reviewDao" resultType="com.study.springboot.dto.ReviewDto">
+		SELECT * FROM review WHERE pnum = #{param1} ORDER BY regroup DESC, restep ASC, reindent ASC
+	</select>
+    <select id="userSaleDao" resultType="string">
+		SELECT mid FROM sale WHERE pnum = #{param1}
+	</select>
+	<select id="reveiwListDao" resultType="map">
+		SELECT p.pnum, p.pname, c.ccnt, p.price
+		FROM product p, cart c 
+		WHERE c.mid =#{param1}
+		AND p.pnum = c.pnum
+	</select>
+	<insert id="reviewWriteDao">
+		INSERT INTO review (reid, mid, pnum, review, regroup, restep, reindent)
+		VALUES (re_seq.nextval, #{param1}, #{param2}, #{param3}, re_seq.nextval, #{param4}, #{param5})
+	</insert>
+	<insert id="replyDao">
+		INSERT INTO review(reid, mid, pnum, review, regroup, restep, reindent) VALUES (re_seq.nextval, #{param1}, #{param2}, #{param3}, #{param4}, #{param5}+1, #{param6}+1)
+	</insert>
+	<select id="replyViewDao" resultType="com.study.springboot.dto.ReviewDto">
+		SELECT * FROM review WHERE reid=#{param1}
+	</select>
+	
+	<update id="replyShapeDao">
+		<![CDATA[
+			UPDATE mvc_board SET bStep = bStep + 1 WHERE bGroup=#{param1} and bStep > #{param2}
+		]]>
+		<!-- UPDATE mvc_board SET bStep = bStep + 1 WHERE bGroup=#{param1} and bStep > #{param2} -->
+	</update>
+    <!--       notice       -->
+ 	<select id="noticeViewDao" resultType="com.study.springboot.dto.NoticeDto">
+      SELECT * FROM notice_bbs WHERE nonum = #{param1}
+    </select>
+	<select id="notilistDao" resultType="com.study.springboot.dto.NoticeDto">
+		<![CDATA[
+		SELECT * FROM (
+			SELECT rownum num, A.* FROM ( 
+			    SELECT * FROM notice_bbs 
+			     ORDER BY nonum desc) A
+			WHERE rownum <= #{_end} ) B
+		 WHERE B.num >= #{_start} 
+		]]>
+	</select>
+	<select id="articlePage" resultType="_int">
+		SELECT COUNT(*) FROM notice_bbs
+	</select>
+	<insert id="noticeWriteDao">
+		INSERT INTO notice_bbs (nonum, notitle, nocontent, nodate)
+ 		VALUES (n_seq.nextval, #{param1},#{param2}, SYSDATE)
+	</insert>
+	<!-- Sale -->
+	<insert id="addSaleDao">
+		INSERT INTO sale
+ 		VALUES (#{param1},#{param2})
+	</insert>
+</mapper>

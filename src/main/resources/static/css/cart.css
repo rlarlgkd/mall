@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+#cartView {
+	width: 900px;
+	margin: 0 auto;
+}
+
+#img {
+	width:10em;
+}

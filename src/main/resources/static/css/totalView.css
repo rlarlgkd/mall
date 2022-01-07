@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+.imgCenter {
+	width: 900px;
+	margin: 100px auto;
+}
+
+.nosearch {
+	background: url("../img/design/nosearch.png");
+	width: 500px;
+	height: 500px;
+  	background-repeat: no-repeat;
+  	background-position: center;
+ 	background-size: cover;
+	margin: 0 auto;
+}

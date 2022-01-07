@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+
+	
+	
+		
+		<div class="float--left">
+			<div class="logo"><a href="main">로고</a></div>
+			
+			
+			<c:set var="name" value="<%=sId %>"/>
+			<c:choose>
+			<c:when test= "${name eq null }">
+				<button class="btn--nav" onclick="location.href='signup';">회원가입</button>
+				<button class="btn--nav" onclick="location.href='login';">로그인</button>
+				<!-- <label>Please log in</label> -->
+			</c:when>
+			<c:otherwise>
+			
+			
+			<button class="btn--nav" onclick="location.href='logout';">로그아웃</button>
+			<button class="btn--nav" onclick="location.href='myPage?mid=<%=sId%>';">마이페이지</button>
+			<button class="btn--nav" onclick="location.href='sellerForm';">판매자페이지</button>
+			<label style="margin-left:15px;"> <%=sId %>님 환영합니다! </label>
+			</c:otherwise>
+			</c:choose>
+		</div>
+
+		<div class="float--right">
+			<!-- 전체 상품 검색 -->
+				<form class= "search_field" action="totalView" method="post" autocomplete="off">
+					<input class="search" type="text" name="pname" placeholder="상품검색">	
+					<button type="submit">검색</button>
+				</form>	
+			
+				<!-- navbar 버튼 -->	
+				<a class="cart-icon" href="cart?mid=<%=sId %>">장바구니</a>&nbsp;
+		
+		</div>
+
+</body>
+</html>
